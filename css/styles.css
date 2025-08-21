@@ -47,6 +47,118 @@ body::before {
     z-index: 1000;
 }
 
+/* Desktop Navigation - Default visible */
+.desktop-nav {
+    display: block;
+}
+
+/* Mobile Navigation - Hidden by default */
+.mobile-top-bar,
+.mobile-bottom-nav {
+    display: none;
+}
+
+/* Mobile Top Bar Styles - Smaller and more aesthetic */
+.mobile-top-bar {
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 0.75rem 20px; /* Reduced from 1rem */
+    justify-content: space-between;
+    align-items: center;
+    height: 60px; /* Fixed height for consistency */
+}
+
+.mobile-brand {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.brand-text {
+    font-size: 1.1rem; /* Reduced from 1.3rem */
+    font-weight: 700;
+    text-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+}
+
+.mobile-login-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1.5px solid rgba(255, 255, 255, 0.3); /* Thinner border */
+    border-radius: 50%;
+    width: 36px; /* Reduced from 44px */
+    height: 36px; /* Reduced from 44px */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    backdrop-filter: blur(15px);
+}
+
+.mobile-login-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.05);
+}
+
+.mobile-login-btn span {
+    font-size: 1rem; /* Reduced from 1.2rem */
+}
+
+/* Mobile Bottom Navigation Styles - Smaller and more aesthetic */
+.mobile-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3); /* Reduced shadow */
+    z-index: 1000;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0.5rem 0; /* Reduced from 0.75rem */
+    height: 65px; /* Fixed height for consistency */
+    safe-area-inset-bottom: env(safe-area-inset-bottom);
+}
+
+.mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #888;
+    transition: all 0.3s;
+    padding: 0.4rem 0.5rem; /* Reduced padding */
+    border-radius: 6px; /* Smaller border radius */
+    min-width: 50px; /* Reduced from 60px */
+    text-align: center;
+}
+
+.mobile-nav-item:hover,
+.mobile-nav-item.active {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px); /* Less dramatic movement */
+}
+
+.mobile-nav-item span:first-child {
+    font-size: 1rem; /* Reduced from 1.2rem */
+    margin-bottom: 0.2rem; /* Reduced spacing */
+}
+
+.mobile-nav-item span:last-child {
+    font-size: 0.65rem; /* Slightly smaller text */
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.3px; /* Reduced letter spacing */
+}
+
 .nav-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -905,6 +1017,168 @@ body::before {
     width: 100%;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* About section credits styling */
+.creators-credit {
+    font-weight: 600;
+    color: #ffffff;
+    text-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
+    margin-top: 2rem;
+    font-size: 1.2rem;
+}
+
+/* Mobile Responsiveness - Critical Navigation Rules */
+@media (max-width: 1023px) {
+    /* Completely hide ALL desktop navigation elements on mobile */
+    .navbar,
+    .desktop-nav,
+    header:not(.mobile-top-bar),
+    nav:not(.mobile-bottom-nav) {
+        display: none !important;
+    }
+    
+    /* Show mobile navigation on mobile */
+    .mobile-top-bar,
+    .mobile-bottom-nav {
+        display: flex !important;
+    }
+    
+    /* Adjust main content for smaller mobile navigation */
+    .main-content {
+        margin-top: 60px !important; /* Space for smaller mobile top bar */
+        margin-bottom: 65px !important; /* Space for smaller mobile bottom nav */
+        padding: 0 15px !important; /* Better mobile padding */
+    }
+    
+    /* Mobile-optimized sections */
+    .clubs-section, .about-section, .contact-section {
+        padding: 40px 15px !important;
+    }
+    
+    /* Mobile hero section optimization */
+    .hero-carousel-section {
+        height: 60vh !important;
+        margin-left: 0 !important;
+        width: 100vw !important;
+    }
+    
+    /* Mobile typography improvements */
+    .hero-content h1 {
+        font-size: 2rem !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    .hero-content p {
+        font-size: 1rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+    
+    /* Mobile buttons */
+    .hero-buttons {
+        flex-direction: column !important;
+        gap: 1rem !important;
+    }
+    
+    .btn-hero-primary,
+    .btn-hero-secondary {
+        padding: 0.8rem 1.5rem !important;
+        font-size: 0.9rem !important;
+        width: 100% !important;
+        max-width: 280px !important;
+    }
+    
+    /* Mobile club cards */
+    .clubs-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+        padding: 0 !important;
+    }
+    
+    .club-card {
+        margin: 0 !important;
+    }
+    
+    /* Mobile modal optimization */
+    .modal-content {
+        width: 95vw !important;
+        max-width: none !important;
+        margin: 1vh auto !important;
+        max-height: 95vh !important;
+    }
+    
+    /* Mobile form optimization */
+    .form-group {
+        margin-bottom: 1.2rem !important;
+    }
+    
+    .form-group input {
+        font-size: 16px !important; /* Prevents zoom on iOS */
+        padding: 0.8rem !important;
+    }
+    
+    /* Mobile dashboard optimization */
+    .dashboard-container {
+        padding: 15px !important;
+        margin-top: 60px !important;
+    }
+    
+    .dashboard-header {
+        flex-direction: column !important;
+        gap: 1rem !important;
+        text-align: center !important;
+    }
+    
+    .dashboard-actions {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+    
+    /* Mobile stats grid */
+    .stats-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 1rem !important;
+    }
+    
+    .stat-card {
+        padding: 1rem !important;
+    }
+    
+    /* Mobile table optimization */
+    .table-container {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    
+    table {
+        font-size: 0.8rem !important;
+        min-width: 600px !important;
+    }
+    
+    /* Mobile carousel controls */
+    .hero-carousel-control {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 1rem !important;
+    }
+    
+    .hero-carousel-prev {
+        left: 10px !important;
+    }
+    
+    .hero-carousel-next {
+        right: 10px !important;
+    }
+    
+    /* Mobile indicators */
+    .hero-carousel-indicators {
+        bottom: 15px !important;
+    }
+    
+    .hero-carousel-indicator {
+        width: 10px !important;
+        height: 10px !important;
+    }
 }
 
 /* Responsive Design */

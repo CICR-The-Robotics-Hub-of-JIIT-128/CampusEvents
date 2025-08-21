@@ -2,9 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Enhanced Viewport Settings -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="College Clubs Hub Admin Dashboard - Manage clubs, users, and content with powerful admin tools.">
+    <meta name="keywords" content="admin dashboard, club management, user management, college admin">
+    <meta name="author" content="College Clubs Hub">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Mobile Optimization -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- iOS Specific Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Admin Dashboard">
+    
+    <!-- Theme Colors -->
+    <meta name="theme-color" content="#1a1a1a">
+    <meta name="msapplication-navbutton-color" content="#1a1a1a">
+    
+    <!-- Prevent automatic phone number detection -->
+    <meta name="format-detection" content="telephone=no">
+    
     <title>Admin Dashboard - College Clubs Hub</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,8 +45,8 @@
         </div>
     </div>
 
-    <!-- Admin Header -->
-    <header class="dashboard-header">
+    <!-- Desktop Navigation -->
+    <header class="navbar desktop-nav dashboard-header">
         <div class="header-content">
             <div class="logo-section">
                 <i class="fas fa-shield-alt admin-icon"></i>
@@ -73,6 +99,40 @@
             </div>
         </div>
     </header>
+
+    <!-- Mobile Top Bar -->
+    <header class="mobile-top-bar">
+        <a href="#" class="mobile-brand">
+            <span class="brand-text">Admin Dashboard</span>
+        </a>
+        <button class="mobile-login-btn" onclick="logout()">
+            <span>🚪</span>
+        </button>
+    </header>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <a href="#overview" class="mobile-nav-item active" onclick="showSection('overview')">
+            <span>📊</span>
+            <span>Dashboard</span>
+        </a>
+        <a href="#clubs" class="mobile-nav-item" onclick="showSection('clubs')">
+            <span>🏛️</span>
+            <span>Clubs</span>
+        </a>
+        <a href="#users" class="mobile-nav-item" onclick="showSection('users')">
+            <span>👥</span>
+            <span>Users</span>
+        </a>
+        <a href="#media" class="mobile-nav-item" onclick="showSection('media')">
+            <span>📷</span>
+            <span>Media</span>
+        </a>
+        <a href="#settings" class="mobile-nav-item" onclick="showSection('settings')">
+            <span>⚙️</span>
+            <span>Settings</span>
+        </a>
+    </nav>
 
     <!-- Main Dashboard Content -->
     <main class="main-content">

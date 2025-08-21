@@ -2,27 +2,93 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Enhanced Viewport Settings -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="College Clubs Hub Club Dashboard - Manage your club profile, upload media, and engage with members.">
+    <meta name="keywords" content="club dashboard, club management, student organizations, media upload">
+    <meta name="author" content="College Clubs Hub">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Mobile Optimization -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- iOS Specific Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Club Dashboard">
+    
+    <!-- Theme Colors -->
+    <meta name="theme-color" content="#6366f1">
+    <meta name="msapplication-navbutton-color" content="#6366f1">
+    
+    <!-- Prevent automatic phone number detection -->
+    <meta name="format-detection" content="telephone=no">
+    
     <title>Club Dashboard - College Clubs Hub</title>
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <body>
-    <!-- Navigation Header -->
-    <header class="navbar">
+    <!-- Desktop Navigation -->
+    <header class="navbar desktop-nav">
         <div class="nav-container">
             <div class="nav-logo">
                 <h1>Club Dashboard</h1>
             </div>
             <nav class="nav-menu">
-                <span id="clubName" class="club-name">Loading...</span>
+                <span id="clubName" class="club-name"></span>
             </nav>
             <div class="nav-auth">
-                <button class="btn-secondary" onclick="goToMainSite()">View Site</button>
-                <button class="btn-danger" onclick="logout()">Logout</button>
+                <button class="btn-primary btn-icon" onclick="goToMainSite()">
+                    <span class="icon">🏠</span>
+                    <span>View Site</span>
+                </button>
+                <button class="btn-outline btn-icon" onclick="logout()">
+                    <span class="icon">🚪</span>
+                    <span>Logout</span>
+                </button>
             </div>
         </div>
     </header>
+
+    <!-- Mobile Top Bar -->
+    <header class="mobile-top-bar">
+        <a href="#" class="mobile-brand">
+            <span class="brand-text">Club Dashboard</span>
+        </a>
+        <button class="mobile-login-btn" onclick="logout()">
+            <span>🚪</span>
+        </button>
+    </header>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <a href="#overview" class="mobile-nav-item active" onclick="showSection('overview')">
+            <span>📊</span>
+            <span>Overview</span>
+        </a>
+        <a href="#profile" class="mobile-nav-item" onclick="showSection('profile')">
+            <span>👤</span>
+            <span>Profile</span>
+        </a>
+        <a href="#media" class="mobile-nav-item" onclick="showSection('media')">
+            <span>📷</span>
+            <span>Media</span>
+        </a>
+        <a href="#upload" class="mobile-nav-item" onclick="showSection('upload')">
+            <span>⬆️</span>
+            <span>Upload</span>
+        </a>
+        <a href="#settings" class="mobile-nav-item" onclick="showSection('settings')">
+            <span>⚙️</span>
+            <span>Settings</span>
+        </a>
+    </nav>
 
     <!-- Main Dashboard Content -->
     <main class="main-content">

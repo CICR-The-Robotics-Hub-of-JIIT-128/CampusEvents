@@ -2,14 +2,44 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Enhanced Viewport Settings -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="College Clubs Hub - Explore amazing clubs and societies, view their latest updates, and connect with like-minded students!">
+    <meta name="keywords" content="college clubs, student organizations, university, societies, student life">
+    <meta name="author" content="College Clubs Hub">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Mobile Optimization -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- iOS Specific Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Clubs Hub">
+    
+    <!-- Theme Colors -->
+    <meta name="theme-color" content="#6366f1">
+    <meta name="msapplication-navbutton-color" content="#6366f1">
+    
+    <!-- Touch Icons for iOS -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <!-- Prevent automatic phone number detection -->
+    <meta name="format-detection" content="telephone=no">
+    
     <title>College Clubs Hub</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/components.css">
 </head>
 <body>
-    <!-- Navigation Header -->
-    <header class="navbar">
+    <!-- Desktop Navigation -->
+    <header class="navbar desktop-nav">
         <div class="nav-container">
             <div class="nav-logo">
                 <h1>College Clubs Hub</h1>
@@ -31,6 +61,36 @@
             </div>
         </div>
     </header>
+
+    <!-- Mobile Top Bar -->
+    <header class="mobile-top-bar">
+        <a href="#home" class="mobile-brand">
+            <span class="brand-text">Clubs Hub</span>
+        </a>
+        <button class="mobile-login-btn" onclick="openLoginModal()">
+            <span>👤</span>
+        </button>
+    </header>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <a href="#home" class="mobile-nav-item active">
+            <span>🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="#clubs" class="mobile-nav-item">
+            <span>🏛️</span>
+            <span>All Clubs</span>
+        </a>
+        <a href="#about" class="mobile-nav-item">
+            <span>ℹ️</span>
+            <span>About</span>
+        </a>
+        <a href="#contact" class="mobile-nav-item">
+            <span>📞</span>
+            <span>Contact</span>
+        </a>
+    </nav>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -84,7 +144,8 @@
         <section id="about" class="about-section">
             <div class="container">
                 <h2>About Our Platform</h2>
-                <p>This platform connects students with clubs and societies across our college. Browse through various clubs, view their activities, and stay updated with the latest events and announcements.</p>
+                <p>A platform that connects students with clubs and societies across our college. Discover activities, stay updated with events, and engage with communities.</p>
+                <p class="creators-credit">Made with 💖 by Saksham & Ankit</p>
             </div>
         </section>
 
