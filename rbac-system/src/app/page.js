@@ -1,22 +1,44 @@
 "use client";
-import { signIn, signOut, useSession } from "next-auth/react";
 
-export default function HomePage() {
-  const { data: session } = useSession();
+import { signIn } from "next-auth/react";
+import Image from "next/image";
+import { motion } from "framer-motion";
 
-  if (session) {
-    return (
-      <div>
-        <p>Welcome, {session.user?.name}</p>
-        <button onClick={() => signOut()}>Sign out</button>
-      </div>
-    );
-  }
-
+export default function LoginPage() {
   return (
-    <div>
-      <p>You are not signed in.</p>
-      <button onClick={() => signIn("google")}>Sign in with Google</button>
+    <div className="page-container">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="signin-container"
+      >
+        <Image
+          src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png"
+          alt="Google"
+          width={80}
+          height={80}
+          className="logo-img"
+        />
+
+        <h1 className="signin-title">Welcome Back</h1>
+        <p className="signin-subtitle">
+          Sign in with Google to continue
+        </p>
+
+        <button
+          onClick={() => signIn("google")}
+          className="google-btn"
+        >
+          <Image
+            src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png"
+            alt="Google logo"
+            width={22}
+            height={22}
+          />
+          <span>Sign in with Google</span>
+        </button>
+      </motion.div>
     </div>
   );
 }
