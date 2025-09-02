@@ -83,7 +83,6 @@ const DEMO_CLUBS = [
 ];
 
 // Global variables
-let currentRole = 'club';
 let currentSignupRole = 'club';
 
 // Security layer - obfuscated super admin access
@@ -149,27 +148,15 @@ function generateClubId(clubName) {
     return clubName.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
 }
 
-// Role selection functions
-function selectRole(role) {
-    currentRole = role;
-    document.querySelectorAll('.role-btn[data-role]').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    document.querySelector(`.role-btn[data-role="${role}"]`).classList.add('active');
-}
-
-function selectSignupRole(role) {
-    currentSignupRole = role;
-    document.querySelectorAll('#signupForm .role-btn[data-role]').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    document.querySelector(`#signupForm .role-btn[data-role="${role}"]`).classList.add('active');
-    
-    // Show/hide club name field based on role
+// Auto-toggle club name field by email domain
+function onSignupEmailInput() {
+    const emailInput = document.getElementById('signupEmail');
     const clubNameGroup = document.getElementById('clubNameGroup');
     const clubNameInput = document.getElementById('signupClubName');
-    
-    if (role === 'admin') {
+    if (!emailInput || !clubNameGroup || !clubNameInput) return;
+    const email = emailInput.value.trim().toLowerCase();
+    const isAdminDomain = /@college\.edu$/i.test(email);
+    if (isAdminDomain) {
         clubNameGroup.style.display = 'none';
         clubNameInput.removeAttribute('required');
     } else {
@@ -184,9 +171,8 @@ function handleLogin(event) {
     
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value.trim();
-    const role = currentRole;
     
-    console.log('Login attempt:', { email, role });
+    console.log('Login attempt:', { email });
     
     // Validate inputs
     if (!email || !password) {
@@ -223,7 +209,12 @@ function handleLogin(event) {
         return false;
     }
     
-    // Validate Gmail for regular users
+    // Ensure users are initialized
+    if (!JSON.parse(localStorage.getItem(STORAGE_KEYS.users) || '[]').length) {
+        initializeUsers();
+    }
+
+    // Validate allowed email domains
     if (!isValidGmail(email)) {
         showAlert('Please use a valid Gmail address or college email', 'error');
         return false;
@@ -247,7 +238,12 @@ function handleLogin(event) {
     // Simulate API call delay
     setTimeout(() => {
         try {
-            const user = findUserByEmail(email);
+            let user = findUserByEmail(email);
+            // If user not found, re-initialize demo users once more (safety net)
+            if (!user) {
+                initializeUsers();
+                user = findUserByEmail(email);
+            }
             
             if (!user) {
                 recordLoginAttempt(email, false);
@@ -258,12 +254,6 @@ function handleLogin(event) {
             if (user.password !== password) {
                 recordLoginAttempt(email, false);
                 showAlert('Incorrect password. Please try again.', 'error');
-                return;
-            }
-            
-            if (user.role !== role) {
-                recordLoginAttempt(email, false);
-                showAlert(`This account is not registered as a ${role}. Please select the correct role.`, 'error');
                 return;
             }
             
@@ -290,7 +280,7 @@ function handleLogin(event) {
             
             showAlert(`Welcome back, ${user.name}!`, 'success');
             
-            // Redirect based on role
+            // Redirect based on user role (auto-detected)
             setTimeout(() => {
                 if (user.role === 'admin') {
                     redirectToAdminDashboard();
@@ -318,13 +308,15 @@ function handleSignup(event) {
     event.preventDefault();
     
     const formData = new FormData(event.target);
+    const email = (formData.get('email') || '').trim().toLowerCase();
+    const isAdminDomain = /@college\.edu$/i.test(email);
     const userData = {
         name: formData.get('name').trim(),
-        email: formData.get('email').trim().toLowerCase(),
+        email,
         password: formData.get('password'),
         confirmPassword: formData.get('confirmPassword'),
         clubName: formData.get('clubName') ? formData.get('clubName').trim() : '',
-        role: currentSignupRole
+        role: isAdminDomain ? 'admin' : 'club'
     };
     
     console.log('Signup attempt:', userData);
@@ -923,8 +915,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Export functions
 window.Auth = {
-    handleClubLogin,
-    handleAdminLogin,
+    handleLogin,
+    handleSignup,
     isLoggedIn,
     getCurrentSession,
     logout,

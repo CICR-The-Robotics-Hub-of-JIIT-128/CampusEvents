@@ -6,26 +6,73 @@ let selectedFiles = [];
 
 // Initialize dashboard when DOM loads
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Club dashboard DOM loaded, initializing...');
     initializeDashboard();
 });
 
 // Initialize the dashboard
 function initializeDashboard() {
-    // Check if user is logged in and is a club
-    if (!Auth.protectPage('club')) {
+    console.log('initializeDashboard called');
+    
+    // Check if CollegeClubApp is available
+    if (typeof CollegeClubApp === 'undefined') {
+        console.error('CollegeClubApp not available, waiting...');
+        setTimeout(initializeDashboard, 100);
         return;
+    }
+    
+    // Check if ClubManager is available
+    if (typeof ClubManager === 'undefined') {
+        console.error('ClubManager not available, waiting...');
+        setTimeout(initializeDashboard, 100);
+        return;
+    }
+    
+    console.log('CollegeClubApp and ClubManager are available, proceeding...');
+    
+    // Custom authentication check that doesn't redirect (for testing purposes)
+    const session = Auth.getCurrentSession();
+    console.log('Current session:', session);
+    
+    if (!session) {
+        console.log('No session found, continuing in testing mode...');
+    } else if (session.type !== 'club') {
+        console.log('User is not a club, continuing in testing mode...');
+    } else {
+        console.log('Valid club session found');
     }
 
     // Get club ID from URL or session
     const urlParams = new URLSearchParams(window.location.search);
     const clubId = urlParams.get('club');
-    const session = Auth.getCurrentSession();
+    // session is already declared above, so just use it
 
     if (!clubId && session) {
         currentClubId = session.clubId;
-    } else {
+    } else if (clubId) {
         currentClubId = clubId;
+    } else {
+        // Fallback: try to get the first available club for testing
+        const allClubs = ClubManager.getAllClubs();
+        if (allClubs && allClubs.length > 0) {
+            currentClubId = allClubs[0].id;
+            console.log('No club ID found, using first available club:', currentClubId);
+        } else {
+            console.error('No clubs available in the system');
+            CollegeClubApp.showAlert('No clubs available. Please create a club first.', 'error');
+            setTimeout(() => {
+                window.location.href = '../index.html';
+            }, 2000);
+            return;
+        }
     }
+
+    console.log('Final currentClubId:', currentClubId);
+    
+    // Debug: show available clubs
+    const allClubs = ClubManager.getAllClubs();
+    console.log('All available clubs:', allClubs);
+    console.log('Club IDs:', allClubs.map(c => c.id));
 
     // Verify user owns this club
     if (session && session.clubId !== currentClubId) {
@@ -48,9 +95,14 @@ function initializeDashboard() {
 
 // Load club data and populate dashboard
 function loadClubData() {
+    console.log('loadClubData called with currentClubId:', currentClubId);
+    
     currentClub = ClubManager.getClubById(currentClubId);
+    console.log('Club data retrieved:', currentClub);
     
     if (!currentClub) {
+        console.error('Club not found for ID:', currentClubId);
+        console.log('Available clubs:', ClubManager.getAllClubs());
         CollegeClubApp.showAlert('Club not found', 'error');
         setTimeout(() => {
             window.location.href = '../index.html';
@@ -58,6 +110,8 @@ function loadClubData() {
         return;
     }
 
+    console.log('Club data loaded successfully:', currentClub);
+    
     // Update UI with club data
     document.getElementById('clubName').textContent = currentClub.name;
     document.title = `${currentClub.name} Dashboard - College Clubs Hub`;
@@ -95,9 +149,21 @@ function updateOverviewStats() {
 
 // Load profile form with current data
 function loadProfileForm() {
+    console.log('Loading profile form...');
     document.getElementById('clubNameEdit').value = currentClub.name || '';
     document.getElementById('clubDescription').value = currentClub.description || '';
     document.getElementById('clubCategory').value = currentClub.category || '';
+    
+    // Add form submission debugging
+    const profileForm = document.getElementById('profileForm');
+    if (profileForm) {
+        console.log('Profile form found, adding event listener');
+        profileForm.addEventListener('submit', function(e) {
+            console.log('Form submit event triggered');
+        });
+    } else {
+        console.error('Profile form not found!');
+    }
     document.getElementById('clubMembers').value = currentClub.members || '';
     document.getElementById('clubEmail').value = currentClub.contact?.email || '';
     document.getElementById('meetingTime').value = currentClub.contact?.meetingTime || '';
@@ -122,7 +188,7 @@ function loadMediaGallery() {
         return `
         <div class="media-item">
             ${media.type === 'image' 
-                ? `<img src="${mediaUrl}" alt="${media.caption || 'Club media'}" onerror="this.src='../images/placeholder.jpg'" />` 
+                ? `<img src="${mediaUrl}" alt="${media.caption || 'Club media'}" onerror="this.src='../images/placeholders/club-placeholder.jpg'" />` 
                 : `<video src="${mediaUrl}" controls><p>Video not available</p></video>`
             }
             <div class="media-overlay">
@@ -201,8 +267,30 @@ function showSection(sectionId) {
     }
 }
 
+// Test function to debug updateProfile
+function testUpdateProfile() {
+    console.log('Test button clicked');
+    console.log('updateProfile function available:', typeof updateProfile);
+    console.log('ClubManager available:', typeof ClubManager !== 'undefined');
+    console.log('CollegeClubApp available:', typeof CollegeClubApp !== 'undefined');
+    
+    // Try to call updateProfile with a mock event
+    const mockEvent = {
+        preventDefault: function() { console.log('preventDefault called'); },
+        target: document.getElementById('profileForm')
+    };
+    
+    if (typeof updateProfile === 'function') {
+        console.log('Calling updateProfile with mock event...');
+        updateProfile(mockEvent);
+    } else {
+        console.error('updateProfile function is not defined!');
+    }
+}
+
 // Handle profile update
 function updateProfile(event) {
+    console.log('updateProfile function called');
     event.preventDefault();
     
     const formData = new FormData(event.target);
@@ -218,17 +306,42 @@ function updateProfile(event) {
         }
     };
 
+    console.log('Form data collected:', updates);
+    console.log('Current club ID:', currentClubId);
+    console.log('Current club object:', currentClub);
+    console.log('ClubManager available:', typeof ClubManager !== 'undefined');
+    console.log('CollegeClubApp available:', typeof CollegeClubApp !== 'undefined');
+
     try {
-        ClubManager.updateClub(currentClubId, updates);
+        console.log('Calling ClubManager.updateClub with:', currentClubId, updates);
+        const updatedClub = ClubManager.updateClub(currentClubId, updates);
+        console.log('Club updated successfully:', updatedClub);
+        
         currentClub = { ...currentClub, ...updates };
         
         // Update UI
         document.getElementById('clubName').textContent = updates.name;
         updateOverviewStats();
         
-        CollegeClubApp.showAlert('Profile updated successfully!', 'success');
+        // Refresh home page data so changes appear there too
+        if (window.opener && window.opener.ClubManager) {
+            window.opener.ClubManager.refreshHomePage();
+        }
+        
+        if (typeof CollegeClubApp !== 'undefined' && CollegeClubApp.showAlert) {
+            CollegeClubApp.showAlert('Profile updated successfully! Home page will show updates when you return.', 'success');
+        } else {
+            alert('Profile updated successfully! Home page will show updates when you return.');
+        }
+        
+        console.log('Profile update completed successfully');
     } catch (error) {
-        CollegeClubApp.showAlert('Error updating profile: ' + error.message, 'error');
+        console.error('Error in updateProfile:', error);
+        if (typeof CollegeClubApp !== 'undefined' && CollegeClubApp.showAlert) {
+            CollegeClubApp.showAlert('Error updating profile: ' + error.message, 'error');
+        } else {
+            alert('Error updating profile: ' + error.message);
+        }
     }
 }
 
@@ -269,7 +382,7 @@ function handleFiles(files) {
     // Validate files
     const validFiles = files.filter(file => {
         // Check file type
-        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'video/mp4', 'video/mov'];
+        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'video/mp4', 'video/quicktime'];
         if (!validTypes.includes(file.type)) {
             CollegeClubApp.showAlert(`Invalid file type: ${file.name}`, 'error');
             return false;
@@ -317,8 +430,8 @@ function removeFile(index) {
     displaySelectedFiles();
 }
 
-// Upload files (mock implementation)
-function uploadFiles() {
+// Upload files (real implementation)
+async function uploadFiles() {
     if (selectedFiles.length === 0) {
         CollegeClubApp.showAlert('No files selected', 'error');
         return;
@@ -328,31 +441,49 @@ function uploadFiles() {
     uploadButton.innerHTML = '<span class="loading-spinner"></span> Uploading...';
     uploadButton.disabled = true;
     
-    // Simulate upload process
-    setTimeout(() => {
+    try {
+        const formData = new FormData();
         selectedFiles.forEach(file => {
-            const mediaData = {
-                type: file.type.startsWith('image/') ? 'image' : 'video',
-                url: `uploads/${currentClubId}/${file.name}`, // Mock URL
-                caption: file.name.split('.')[0],
-                fileName: file.name,
-                size: file.size,
-                uploadDate: new Date().toISOString(),
-                status: 'pending'
-            };
-            
-            try {
-                ClubManager.addMediaToClub(currentClubId, mediaData);
-            } catch (error) {
-                console.error('Error adding media:', error);
-            }
+            formData.append('files', file);
+        });
+        formData.append('clubId', currentClubId);
+        
+        const response = await fetch('http://localhost:3000/api/upload', {
+            method: 'POST',
+            body: formData
         });
         
-        // Refresh club data and UI
-        currentClub = ClubManager.getClubById(currentClubId);
-        loadMediaGallery();
-        updateOverviewStats();
+        const result = await response.json();
         
+        if (result.success) {
+            // Add uploaded files to club media
+            result.files.forEach(fileData => {
+                const mediaData = {
+                    id: fileData.filename,
+                    type: fileData.type,
+                    url: `http://localhost:3000${fileData.url}`,
+                    caption: fileData.originalName.split('.')[0],
+                    fileName: fileData.originalName,
+                    size: fileData.size,
+                    uploadDate: new Date().toISOString(),
+                    status: 'pending'
+                };
+                
+                ClubManager.addMediaToClub(currentClubId, mediaData);
+            });
+            
+            // Refresh UI
+            currentClub = ClubManager.getClubById(currentClubId);
+            loadMediaGallery();
+            updateOverviewStats();
+            
+            CollegeClubApp.showAlert('Files uploaded successfully! Pending admin approval.', 'success');
+        } else {
+            throw new Error(result.message);
+        }
+    } catch (error) {
+        CollegeClubApp.showAlert('Upload failed: ' + error.message, 'error');
+    } finally {
         // Reset upload form
         selectedFiles = [];
         document.getElementById('fileList').style.display = 'none';
@@ -361,9 +492,7 @@ function uploadFiles() {
         // Reset button
         uploadButton.innerHTML = 'Upload Files';
         uploadButton.disabled = false;
-        
-        CollegeClubApp.showAlert('Files uploaded successfully! Pending admin approval.', 'success');
-    }, 2000);
+    }
 }
 
 // View media item

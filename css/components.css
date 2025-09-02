@@ -451,60 +451,7 @@
     }
 }
 
-/* Role Selector */
-.role-selector {
-    margin-bottom: 2rem;
-}
-
-.role-selector label {
-    display: block;
-    margin-bottom: 1rem;
-    font-weight: 600;
-    color: #ffffff;
-    font-size: 1.1rem;
-}
-
-.role-buttons {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-
-.role-btn {
-    flex: 1;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    color: #b0b0b0;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    font-weight: 500;
-}
-
-.role-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
-    color: #ffffff;
-    transform: translateY(-2px);
-}
-
-.role-btn.active {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
-    border-color: rgba(255, 255, 255, 0.4);
-    color: #ffffff;
-    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
-    transform: translateY(-3px);
-}
-
-.role-icon {
-    font-size: 1.5rem;
-    margin-bottom: 0.25rem;
-}
+/* (Removed role selector styles) */
 
 /* Form Styling */
 .form-group {
@@ -675,14 +622,6 @@
         margin: 5% auto;
         width: 95%;
         max-width: none;
-    }
-    
-    .role-buttons {
-        flex-direction: column;
-    }
-    
-    .role-btn {
-        padding: 1.25rem 1rem;
     }
 }
 

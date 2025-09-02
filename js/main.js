@@ -3,15 +3,25 @@
 // Wait for DOM to load
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
+    
+    // Auto-refresh data when returning to home page
+    if (window.performance && window.performance.navigation.type === window.performance.navigation.TYPE_BACK_FORWARD) {
+        // User navigated back/forward, refresh data
+        setTimeout(() => {
+            if (window.ClubManager) {
+                window.ClubManager.refreshHomePage();
+            }
+        }, 500);
+    }
 });
 
 // Initialize the application
-function initializeApp() {
+async function initializeApp() {
     // Set up navigation
     setupNavigation();
     
     // Load initial data
-    loadClubs();
+    await loadClubs();
     
     // Load hero carousel
     loadHeroCarousel();
@@ -187,8 +197,10 @@ function closeAllModals() {
 
 // Clear login form
 function clearLoginForm() {
-    document.getElementById('clubId').value = '';
-    document.getElementById('clubPassword').value = '';
+    const emailInput = document.getElementById('loginEmail');
+    const passwordInput = document.getElementById('loginPassword');
+    if (emailInput) emailInput.value = '';
+    if (passwordInput) passwordInput.value = '';
 }
 
 // Clear admin form
@@ -570,6 +582,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// Refresh clubs data
+function refreshClubsData() {
+    if (window.ClubManager) {
+        window.ClubManager.refreshHomePage();
+        showAlert('Clubs data refreshed!', 'success');
+    }
+}
+
 // Export functions for use in other scripts
 window.CollegeClubApp = {
     showAlert,
@@ -587,5 +607,9 @@ window.CollegeClubApp = {
     closeClubDetailModal,
     scrollToClubs,
     scrollToGallery,
-    loadMediaCarousel
+    refreshClubsData
 };
+
+// Make localStorage functions globally available for other scripts
+window.getLocalStorage = getLocalStorage;
+window.setLocalStorage = setLocalStorage;

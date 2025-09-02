@@ -178,8 +178,8 @@ const SAMPLE_CLUBS = [
     }
 ];
 
-// Load clubs data
-function loadClubs() {
+// Load clubs data with real media
+async function loadClubs() {
     // In a real app, this would be an API call
     // For now, we'll use local storage with sample data
     
@@ -190,8 +190,21 @@ function loadClubs() {
         setLocalStorage('clubs', clubs);
     }
     
-    displayClubs(clubs);
-    return clubs;
+    // Load real media for each club (only if backend is available)
+    const clubsWithMedia = await Promise.all(clubs.map(async (club) => {
+        try {
+            const response = await fetch(`http://localhost:3000/api/club/${club.id}/media`);
+            const result = await response.json();
+            return { ...club, media: result.media };
+        } catch (error) {
+            // If backend is not available, use the media stored in localStorage
+            console.log(`Backend not available, using local data for club ${club.id}`);
+            return { ...club, media: club.media || [] };
+        }
+    }));
+    
+    displayClubs(clubsWithMedia);
+    return clubsWithMedia;
 }
 
 // Display clubs on the main page
@@ -207,12 +220,20 @@ function displayClubs(clubs) {
     clubsGrid.innerHTML = clubs.map(club => createClubCard(club)).join('');
 }
 
-// Create club card HTML
+// Create club card HTML with real media
 function createClubCard(club) {
+    // Get featured media for this club
+    const featuredMedia = club.media && club.media.length > 0 ? club.media[0] : null;
+    
     return `
         <div class="club-card" onclick="openClubDetailModal('${club.id}')">
             <div class="club-card-image">
-                ${club.logo}
+                ${featuredMedia 
+                    ? (featuredMedia.type === 'image'
+                        ? `<img src="http://localhost:3000${featuredMedia.url}" alt="${club.name}" onerror="this.src='images/placeholders/club-placeholder.jpg'">`
+                        : `<video src="http://localhost:3000${featuredMedia.url}" muted preload="metadata" autoplay loop></video>`)
+                    : club.logo
+                }
             </div>
             <div class="club-card-content">
                 <h3>${club.name}</h3>
@@ -228,13 +249,42 @@ function createClubCard(club) {
 
 // Get club by ID
 function getClubById(clubId) {
-    const clubs = getLocalStorage('clubs') || SAMPLE_CLUBS;
-    return clubs.find(club => club.id === clubId);
+    console.log('getClubById called with clubId:', clubId);
+    
+    // Fallback to window.getLocalStorage if getLocalStorage is not directly available
+    const storageFunction = getLocalStorage || window.getLocalStorage;
+    const clubs = storageFunction ? storageFunction('clubs') || SAMPLE_CLUBS : SAMPLE_CLUBS;
+    
+    console.log('Available clubs in getClubById:', clubs);
+    console.log('Club IDs:', clubs.map(c => c.id));
+    
+    const foundClub = clubs.find(club => club.id === clubId);
+    console.log('Found club:', foundClub);
+    return foundClub;
 }
 
 // Get all clubs
 function getAllClubs() {
-    return getLocalStorage('clubs') || SAMPLE_CLUBS;
+    console.log('getAllClubs called');
+    console.log('getLocalStorage available:', typeof getLocalStorage);
+    console.log('window.getLocalStorage available:', typeof window.getLocalStorage);
+    
+    // Fallback to window.getLocalStorage if getLocalStorage is not directly available
+    const storageFunction = getLocalStorage || window.getLocalStorage;
+    console.log('Using storage function:', storageFunction);
+    
+    if (!storageFunction) {
+        console.error('No storage function available, returning SAMPLE_CLUBS');
+        return SAMPLE_CLUBS;
+    }
+    
+    const storedClubs = storageFunction('clubs');
+    console.log('Stored clubs from localStorage:', storedClubs);
+    console.log('SAMPLE_CLUBS:', SAMPLE_CLUBS);
+    
+    const result = storedClubs || SAMPLE_CLUBS;
+    console.log('getAllClubs returning:', result);
+    return result;
 }
 
 // Add new club (for admin use)
@@ -378,6 +428,11 @@ function getClubStats() {
     return stats;
 }
 
+// Refresh home page data
+function refreshHomePage() {
+    loadClubs();
+}
+
 // Export functions
 window.ClubManager = {
     loadClubs,
@@ -394,5 +449,6 @@ window.ClubManager = {
     getClubsByStatus,
     approveClub,
     rejectClub,
-    getClubStats
+    getClubStats,
+    refreshHomePage
 };

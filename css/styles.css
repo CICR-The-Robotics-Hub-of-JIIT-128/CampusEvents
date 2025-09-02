@@ -1273,3 +1273,37 @@ body::before {
         font-size: 2rem;
     }
 }
+
+/* Section Headers with Refresh Button */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+}
+
+.section-header h2 {
+    margin: 0;
+}
+
+.btn-refresh {
+    background: #6366f1;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.3s;
+}
+
+.btn-refresh:hover {
+    background: #4f46e5;
+}
+
+.btn-refresh span {
+    font-size: 1rem;
+}
