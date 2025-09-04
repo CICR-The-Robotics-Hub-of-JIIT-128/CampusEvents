@@ -39,7 +39,7 @@
 </head>
 <body class="admin-dashboard">
     <div id="loadingOverlay" class="loading-overlay">
-        <div class="loading-spinner">
+        <div class="loading-container">
             <div class="spinner-ring"></div>
             <div class="spinner-text">Loading Dashboard...</div>
         </div>
@@ -203,9 +203,12 @@
 
                 <!-- Clubs Management Section -->
                 <div id="clubs" class="dashboard-section">
-                    <div class="dashboard-header">
-                        <h1>Manage Clubs</h1>
-                        <p>View and manage all registered clubs</p>
+                    <div class="dashboard-header" style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+                        <div>
+                            <h1>Manage Clubs</h1>
+                            <p>View and manage all registered clubs</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="openAddClubModal()">➕ Add Club</button>
                     </div>
 
                     <!-- Clubs Filter -->
@@ -431,6 +434,65 @@
                         <i class="fas fa-skull-crossbones"></i> DESTROY EVERYTHING
                     </button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Club Modal -->
+    <div id="addClubModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Club</h3>
+                <button class="close-btn" onclick="closeModal('addClubModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addClubForm" onsubmit="submitAddClub(event)">
+                    <div class="form-group">
+                        <label for="newClubName">Club Name</label>
+                        <input type="text" id="newClubName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newClubDescription">Description</label>
+                        <textarea id="newClubDescription" name="description" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="newClubCategory">Category</label>
+                        <select id="newClubCategory" name="category" required>
+                            <option value="">Select Category</option>
+                            <option value="Technology">Technology</option>
+                            <option value="Arts">Arts</option>
+                            <option value="Sports">Sports</option>
+                            <option value="Academic">Academic</option>
+                            <option value="Cultural">Cultural</option>
+                            <option value="Social Service">Social Service</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="newClubMembers">Members</label>
+                        <input type="number" id="newClubMembers" name="members" value="0" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newClubEmail">Contact Email</label>
+                        <input type="email" id="newClubEmail" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newClubMeetingTime">Meeting Time</label>
+                        <input type="text" id="newClubMeetingTime" name="meetingTime" placeholder="e.g., Fridays 4:00 PM" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newClubLocation">Location</label>
+                        <input type="text" id="newClubLocation" name="location" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newClubLogo">Logo (emoji or short text)</label>
+                        <input type="text" id="newClubLogo" name="logo" placeholder="e.g., 🚀">
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('addClubModal')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Club</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

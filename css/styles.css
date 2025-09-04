@@ -793,6 +793,14 @@ body::before {
     text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
 }
 
+/* Ensure images don't cause layout shifts/flicker */
+.club-card-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 @keyframes gradientShift {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }

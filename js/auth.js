@@ -177,6 +177,11 @@ function handleLogin(event) {
     // Validate inputs
     if (!email || !password) {
         showAlert('Please fill in all fields', 'error');
+        const err = document.getElementById('loginError');
+        if (err) {
+            err.textContent = 'Please fill in all fields';
+            err.style.display = 'block';
+        }
         return false;
     }
     
@@ -217,12 +222,22 @@ function handleLogin(event) {
     // Validate allowed email domains
     if (!isValidGmail(email)) {
         showAlert('Please use a valid Gmail address or college email', 'error');
+        const err = document.getElementById('loginError');
+        if (err) {
+            err.textContent = 'Please use a valid Gmail address or college email';
+            err.style.display = 'block';
+        }
         return false;
     }
     
     // Check rate limiting
     if (isRateLimited(email)) {
         showAlert('Too many failed attempts. Please try again later.', 'error');
+        const err = document.getElementById('loginError');
+        if (err) {
+            err.textContent = 'Too many failed attempts. Please try again later.';
+            err.style.display = 'block';
+        }
         return false;
     }
     
@@ -248,17 +263,32 @@ function handleLogin(event) {
             if (!user) {
                 recordLoginAttempt(email, false);
                 showAlert('Account not found. Please check your email or sign up.', 'error');
+                const err = document.getElementById('loginError');
+                if (err) {
+                    err.textContent = 'Account not found. Please check your email or sign up.';
+                    err.style.display = 'block';
+                }
                 return;
             }
             
             if (user.password !== password) {
                 recordLoginAttempt(email, false);
                 showAlert('Incorrect password. Please try again.', 'error');
+                const err = document.getElementById('loginError');
+                if (err) {
+                    err.textContent = 'Incorrect password. Please try again.';
+                    err.style.display = 'block';
+                }
                 return;
             }
             
             if (!user.isVerified) {
                 showAlert('Please verify your email address before logging in.', 'warning');
+                const err = document.getElementById('loginError');
+                if (err) {
+                    err.textContent = 'Please verify your email address before logging in.';
+                    err.style.display = 'block';
+                }
                 return;
             }
             
@@ -279,6 +309,11 @@ function handleLogin(event) {
             localStorage.setItem(STORAGE_KEYS.session, JSON.stringify(session));
             
             showAlert(`Welcome back, ${user.name}!`, 'success');
+            const err = document.getElementById('loginError');
+            if (err) {
+                err.textContent = '';
+                err.style.display = 'none';
+            }
             
             // Redirect based on user role (auto-detected)
             setTimeout(() => {

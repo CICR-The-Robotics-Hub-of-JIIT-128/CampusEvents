@@ -403,9 +403,13 @@ function displayHeroCarousel() {
     
     // Build hero carousel items
     carouselInner.innerHTML = carouselItems.map((item, index) => {
+        // Use URL as-is if already absolute or local asset; otherwise don't force localhost
+        const heroSrc = (item.url && (item.url.startsWith('http') || item.url.startsWith('data:') || item.url.startsWith('blob:') || item.url.match(/^(images|videos)\//)))
+            ? item.url
+            : (item.url && item.url.startsWith('/') ? `http://localhost:3000${item.url}` : item.url);
         const mediaElement = item.type === 'image' 
-            ? `<img src="${item.url}" alt="${item.caption || 'Club media'}" loading="lazy" />` 
-            : `<video src="${item.url}" muted preload="metadata" autoplay loop></video>`;
+            ? `<img src="${heroSrc}" alt="${item.caption || 'Club media'}" loading="lazy" decoding="async" />` 
+            : `<video src="${heroSrc}" muted preload="metadata" autoplay loop></video>`;
             
         return `
             <div class="hero-carousel-item ${index === 0 ? 'active' : ''}">

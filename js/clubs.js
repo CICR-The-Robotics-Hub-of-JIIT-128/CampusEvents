@@ -225,15 +225,21 @@ function createClubCard(club) {
     // Get featured media for this club
     const featuredMedia = club.media && club.media.length > 0 ? club.media[0] : null;
     
+    // Build a safe media src without forcing localhost when not needed
+    const src = featuredMedia && featuredMedia.url
+        ? (featuredMedia.url.startsWith('http') || featuredMedia.url.startsWith('data:') || featuredMedia.url.startsWith('blob:') || featuredMedia.url.match(/^(images|videos)\//)
+            ? featuredMedia.url
+            : (featuredMedia.url.startsWith('/') ? `http://localhost:3000${featuredMedia.url}` : featuredMedia.url))
+        : null;
+
     return `
         <div class="club-card" onclick="openClubDetailModal('${club.id}')">
             <div class="club-card-image">
-                ${featuredMedia 
+                ${src
                     ? (featuredMedia.type === 'image'
-                        ? `<img src="http://localhost:3000${featuredMedia.url}" alt="${club.name}" onerror="this.src='images/placeholders/club-placeholder.jpg'">`
-                        : `<video src="http://localhost:3000${featuredMedia.url}" muted preload="metadata" autoplay loop></video>`)
-                    : club.logo
-                }
+                        ? `<img src="${src}" alt="${club.name}" loading="lazy" decoding="async" onerror="this.src='images/placeholders/club-placeholder.jpg'">`
+                        : `<video src="${src}" muted preload="metadata" autoplay loop></video>`)
+                    : club.logo}
             </div>
             <div class="club-card-content">
                 <h3>${club.name}</h3>

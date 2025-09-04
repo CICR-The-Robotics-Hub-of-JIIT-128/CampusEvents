@@ -121,6 +121,49 @@ function setupEventListeners() {
     }
 }
 
+// Open Add Club modal
+function openAddClubModal() {
+    const modal = document.getElementById('addClubModal');
+    if (modal) modal.style.display = 'flex';
+}
+
+// Submit Add Club form
+function submitAddClub(event) {
+    event.preventDefault();
+    const form = document.getElementById('addClubForm');
+    if (!form) return;
+    const formData = new FormData(form);
+    const clubData = {
+        name: formData.get('name').trim(),
+        description: formData.get('description').trim(),
+        category: formData.get('category'),
+        members: Number(formData.get('members')) || 0,
+        logo: (formData.get('logo') || '🏛️').toString(),
+        contact: {
+            email: formData.get('email').trim(),
+            meetingTime: formData.get('meetingTime').trim(),
+            location: formData.get('location').trim()
+        },
+        founded: new Date().getFullYear().toString()
+    };
+    try {
+        const created = ClubManager.addClub(clubData);
+        showAlert(`Club "${created.name}" added. Awaiting approval.`, 'success');
+        closeModal('addClubModal');
+        form.reset();
+        // Refresh sections if open
+        if (currentSection === 'clubs') {
+            loadClubsTable();
+        }
+        updateDashboardStats();
+        if (window.ClubManager && window.ClubManager.refreshHomePage) {
+            window.ClubManager.refreshHomePage();
+        }
+    } catch (e) {
+        showAlert('Failed to add club: ' + e.message, 'error');
+    }
+}
+
 // Update current date/time
 function updateDateTime() {
     const now = new Date();
@@ -1047,3 +1090,5 @@ window.executeDestroy = executeDestroy;
 window.closeModal = closeModal;
 window.showProfileSettings = showProfileSettings;
 window.showSystemSettings = showSystemSettings;
+window.openAddClubModal = openAddClubModal;
+window.submitAddClub = submitAddClub;
